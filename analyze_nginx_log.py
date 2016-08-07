@@ -3,6 +3,7 @@
 import json
 from collections import Counter  # Python2.7 feature
 import os
+import sys
 import paramiko as ssh
 
 # 'sudo apt install libssl-dev libffi-dev python-dev'
@@ -16,7 +17,8 @@ client.connect('127.0.0.1', 22, 'boer', os.environ.get('SSH_PASSWD'))
 
 t = client.get_transport()
 channel = t.open_session()
-channel.exec_command('sudo cp /var/log/nginx/access.log /tmp/access.log && sudo chown app. /tmp/access.log')
+channel.exec_command(
+    'sudo cp /var/log/nginx/access.log /tmp/access.log && sudo chown app. /tmp/access.log')
 exit_code = channel.recv_exit_status()
 if exit_code == 0:
     ftp = client.open_sftp()
@@ -31,7 +33,6 @@ else:
     t.close()
     client.close()
     sys.exit()
-
 
 count = []
 counter = {}
