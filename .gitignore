@@ -2,3 +2,5 @@
 *.log
 *.pyc
 venv
+note.py
+access*
