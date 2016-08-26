@@ -12,11 +12,14 @@ import paramiko as ssh
 
 # 'sudo apt install libssl-dev libffi-dev python-dev'
 
+
 def red_text(txt):
     return '\033[31m' + txt + '\033[0m'
 
+
 def green_text(txt):
     return '\033[32m' + txt + '\033[0m'
+
 
 def get_log(host):
     'ftp web服务器nginx日志.'
@@ -28,7 +31,8 @@ def get_log(host):
     t = client.get_transport()
     channel = t.open_session()
     channel.get_pty()
-    channel.exec_command('sudo cp -f /var/log/nginx/access.log /tmp/access.log && sudo chown app. /tmp/access.log')
+    channel.exec_command(
+        'sudo cp -f /var/log/nginx/access.log /tmp/access.log && sudo chown app. /tmp/access.log')
     print '...', channel.recv(9999)
     print '...', channel.recv_stderr(9999)
 
@@ -76,12 +80,11 @@ def exec_get_log(hosts):
     'multiprocessing 获取多台服务器日志.'
     p = Pool(len(hosts))
     for host in hosts:
-        p.apply_async(get_log, args=(host,))
+        p.apply_async(get_log, args=(host, ))
         print red_text('Get log file done.by'), green_text(host)
     p.close()
     p.join()
     print green_text('Get all log done...')
-
 
 #def exec_analyze(logfiles):
 #    p = Pool(len(logfiles))
@@ -93,7 +96,6 @@ def exec_get_log(hosts):
 #    p.join()
 #    return results
 
-
 if __name__ == '__main__':
     # prod web server
     hosts = ['192.168.28.12', '192.168.28.13']
@@ -103,7 +105,7 @@ if __name__ == '__main__':
 
     # 调用多进程获取日志函数
     exec_get_log(hosts)
-    
+
     counter = {}
     # multiprocessing Pool对象的map函数用法.
     p = Pool(len(logfiles))
